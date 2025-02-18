@@ -13,6 +13,8 @@ kspVersion = "2.0.0-1.0.23"
 retrofitVer = "2.11.0"
 hiltVersion = "2.51.1"
 kotlinxSerializationJson = "1.8.0"
+coroutineVersion = "1.3.9"
+httpLoggingVer = "4.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +39,8 @@ squareup-retrofit-converter-kotlinx = {group = "com.squareup.retrofit2", name = 
 kotlinx-serialization-json = {group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson"}
 hilt-android = {group = "com.google.dagger", name = "hilt-android", version.ref = "hiltVersion"}
 hilt-android-compiler = {group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hiltVersion"}
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutineVersion"}
+logging-interceptor = {group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "httpLoggingVer"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
