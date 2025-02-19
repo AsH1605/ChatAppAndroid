@@ -32,7 +32,7 @@ object ApiModule {
     @Singleton
     fun provideRetrofitClient(client: OkHttpClient): Retrofit{
         return Retrofit.Builder()
-            .baseUrl("http://192.168.0.182/api/v1")
+            .baseUrl("http://192.168.0.182:8080/api/v1/")
             .client(client)
             .addConverterFactory(
                 Json.asConverterFactory(
