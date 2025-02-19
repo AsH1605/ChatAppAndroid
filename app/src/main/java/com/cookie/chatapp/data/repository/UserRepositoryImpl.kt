@@ -2,7 +2,9 @@ package com.cookie.chatapp.data.repository
 
 import android.util.Log
 import com.cookie.chatapp.data.local.dao.UserDao
+import com.cookie.chatapp.data.local.entities.UserEntity
 import com.cookie.chatapp.data.remote.UserApi
+import com.cookie.chatapp.data.remote.dto.user.UserLoginRequest
 import com.cookie.chatapp.data.remote.dto.user.UserRegisterRequest
 import com.cookie.chatapp.domain.models.UserModel
 import com.cookie.chatapp.domain.repository.UserRepository
@@ -34,7 +36,24 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun loginUser() {
-        TODO("Not yet implemented")
+    override suspend fun loginUser(username: String, password: String): Boolean = withContext(ioDIspatcher){
+        try {
+            val request = UserLoginRequest(
+                username = username,
+                password = password
+            )
+            val response = userApi.loginUser(request)
+            if(response.success){
+                userDao.addUser(UserEntity(
+                    userId = response.data.user.id,
+                    username = response.data.user.username,
+                    idToken = response.idToken
+                ))
+            }
+            true
+        }catch (e: HttpException){
+            Log.e("Impl", e.message())
+            false
+        }
     }
 }

@@ -5,26 +5,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.cookie.chatapp.presentation.theme.ChatAppTheme
-import com.cookie.chatapp.presentation.user.UserRegistrationScreen
-import com.cookie.chatapp.presentation.user.UserVM
+import com.cookie.chatapp.presentation.login.LoginVM
+import com.cookie.chatapp.presentation.login.UserLoginScreen
+import com.cookie.chatapp.presentation.register.UserRegistrationScreen
+import com.cookie.chatapp.presentation.register.UserVM
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val userVM: UserVM by viewModels()
+        val userVM: LoginVM by viewModels()
         enableEdgeToEdge()
         setContent {
-            UserRegistrationScreen(userVM)
+            UserLoginScreen(userVM)
         }
     }
 }

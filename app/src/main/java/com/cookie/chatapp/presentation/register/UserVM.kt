@@ -1,11 +1,11 @@
-package com.cookie.chatapp.presentation.user
+package com.cookie.chatapp.presentation.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cookie.chatapp.domain.models.UserModel
 import com.cookie.chatapp.domain.repository.UserRepository
-import com.cookie.chatapp.presentation.user.model.UiEvent
-import com.cookie.chatapp.presentation.user.model.UiState
+import com.cookie.chatapp.presentation.register.model.UiEvent
+import com.cookie.chatapp.presentation.register.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

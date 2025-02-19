@@ -1,5 +1,7 @@
 package com.cookie.chatapp.data.remote
 
+import com.cookie.chatapp.data.remote.dto.user.UserLoginRequest
+import com.cookie.chatapp.data.remote.dto.user.UserLoginResponse
 import com.cookie.chatapp.data.remote.dto.user.UserRegisterRequest
 import com.cookie.chatapp.data.remote.dto.user.UserRegisterResponse
 import retrofit2.http.Body
@@ -11,5 +13,5 @@ interface UserApi {
     suspend fun registerUser(@Body userRegisterRequest: UserRegisterRequest): UserRegisterResponse
 
     @POST("login")
-    suspend fun loginUser(@Body )
+    suspend fun loginUser(@Body userLoginRequest: UserLoginRequest): UserLoginResponse
 }

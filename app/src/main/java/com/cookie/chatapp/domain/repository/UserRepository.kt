@@ -6,5 +6,5 @@ interface UserRepository {
 
     suspend fun registerUser(user: UserModel): Boolean
 
-    suspend fun loginUser()
+    suspend fun loginUser(username: String, password: String): Boolean
 }

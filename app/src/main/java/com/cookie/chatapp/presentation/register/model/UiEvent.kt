@@ -1,4 +1,4 @@
-package com.cookie.chatapp.presentation.user.model
+package com.cookie.chatapp.presentation.register.model
 
 sealed interface UiEvent {
     data class OnUsernameChange(val updatedUsername: String): UiEvent

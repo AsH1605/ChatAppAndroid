@@ -1,4 +1,4 @@
-package com.cookie.chatapp.presentation.user
+package com.cookie.chatapp.presentation.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,16 +22,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cookie.chatapp.R
+import com.cookie.chatapp.presentation.login.model.UiEvent
+import com.cookie.chatapp.presentation.login.model.UiState
 import com.cookie.chatapp.presentation.theme.ChatAppTheme
-import com.cookie.chatapp.presentation.user.model.UiEvent
-import com.cookie.chatapp.presentation.user.model.UiState
 
 @Composable
-fun UserRegistrationScreen(
-    viewModel: UserVM
+fun UserLoginScreen(
+    viewModel: LoginVM
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    UserRegisterScreen(
+    UserLoginScreen(
         uiState = uiState,
         onUiEvent = {event->
             viewModel.onUiEvent(event)
@@ -40,7 +40,7 @@ fun UserRegistrationScreen(
 }
 
 @Composable
-private fun UserRegisterScreen(
+private fun UserLoginScreen(
     uiState: UiState,
     onUiEvent: (UiEvent) -> Unit
 ) {
@@ -76,39 +76,7 @@ private fun UserRegisterScreen(
             },
             modifier = Modifier.fillMaxWidth(0.8f)
         )
-        Spacer(modifier = Modifier.height(12.dp))
-        OutlinedTextField(
-            value = uiState.firstName,
-            onValueChange = {updatedFirstName->
-                onUiEvent(UiEvent.OnFirstNameChange(updatedFirstName))
-            },
-            placeholder = {
-                Text("FirstName")
-            },
-            modifier = Modifier.fillMaxWidth(0.8f)
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        OutlinedTextField(
-            value = uiState.lastName,
-            onValueChange = {updatedLastName->
-                onUiEvent(UiEvent.OnLastNameChange(updatedLastName))
-            },
-            placeholder = {
-                Text("LastName")
-            },
-            modifier = Modifier.fillMaxWidth(0.8f)
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        OutlinedTextField(
-            value = uiState.email,
-            onValueChange = {updatedEmail->
-                onUiEvent(UiEvent.OnEmailChange(updatedEmail))
-            },
-            placeholder = {
-                Text("Email")
-            },
-            modifier = Modifier.fillMaxWidth(0.8f)
-        )
+
         Spacer(modifier = Modifier.height(12.dp))
         OutlinedTextField(
             value = uiState.password,
@@ -125,10 +93,20 @@ private fun UserRegisterScreen(
             modifier = Modifier.fillMaxWidth(0.8f),
             shape = RoundedCornerShape(4.dp),
             onClick = {
+                onUiEvent(UiEvent.OnLoginClicked)
+            }
+        ) {
+            Text("Login!")
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        Button(
+            modifier = Modifier.fillMaxWidth(0.8f),
+            shape = RoundedCornerShape(4.dp),
+            onClick = {
                 onUiEvent(UiEvent.OnRegisterClicked)
             }
         ) {
-            Text("Register!")
+            Text("New User? Signup now!")
         }
     }
 }
@@ -137,12 +115,9 @@ private fun UserRegisterScreen(
 @Composable
 private fun PreviewUserRegistrationScreen() {
     ChatAppTheme {
-        UserRegisterScreen(
+        UserLoginScreen(
             uiState = UiState(
                 username = "Username",
-                firstName = "FirstName",
-                lastName = "LastName",
-                email = "Email",
                 password = "Password",
                 error = null
             ),
@@ -156,12 +131,9 @@ private fun PreviewUserRegistrationScreen() {
 @Composable
 private fun PreviewUserRegistrationScreen2() {
     ChatAppTheme(darkTheme = true) {
-        UserRegisterScreen(
+        UserLoginScreen(
             uiState = UiState(
                 username = "Username",
-                firstName = "FirstName",
-                lastName = "LastName",
-                email = "Email",
                 password = "Password",
                 error = null
             ),

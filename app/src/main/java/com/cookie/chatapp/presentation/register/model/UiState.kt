@@ -1,4 +1,4 @@
-package com.cookie.chatapp.presentation.user.model
+package com.cookie.chatapp.presentation.register.model
 
 data class UiState(
     val username: String,
