@@ -128,7 +128,10 @@ private fun UserRegisterScreen(
                 onUiEvent(UiEvent.OnRegisterClicked)
             }
         ) {
-            Text("Register!")
+            Text(
+                "Register!",
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
     }
 }

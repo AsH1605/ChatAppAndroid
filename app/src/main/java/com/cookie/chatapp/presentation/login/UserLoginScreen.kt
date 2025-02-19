@@ -96,7 +96,10 @@ private fun UserLoginScreen(
                 onUiEvent(UiEvent.OnLoginClicked)
             }
         ) {
-            Text("Login!")
+            Text(
+                "Login!",
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
         Spacer(modifier = Modifier.height(12.dp))
         Button(
@@ -106,7 +109,10 @@ private fun UserLoginScreen(
                 onUiEvent(UiEvent.OnRegisterClicked)
             }
         ) {
-            Text("New User? Signup now!")
+            Text(
+                "New User? Signup now!",
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
     }
 }

@@ -9,6 +9,7 @@ import com.cookie.chatapp.presentation.login.LoginVM
 import com.cookie.chatapp.presentation.login.UserLoginScreen
 import com.cookie.chatapp.presentation.register.UserRegistrationScreen
 import com.cookie.chatapp.presentation.register.UserVM
+import com.cookie.chatapp.presentation.theme.ChatAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +19,10 @@ class MainActivity : ComponentActivity() {
         val userVM: LoginVM by viewModels()
         enableEdgeToEdge()
         setContent {
-            UserLoginScreen(userVM)
+            ChatAppTheme {
+                UserLoginScreen(userVM)
+            }
+
         }
     }
 }
