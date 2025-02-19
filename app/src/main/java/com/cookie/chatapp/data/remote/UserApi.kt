@@ -9,4 +9,7 @@ interface UserApi {
 
     @POST("register")
     suspend fun registerUser(@Body userRegisterRequest: UserRegisterRequest): UserRegisterResponse
+
+    @POST("login")
+    suspend fun loginUser(@Body )
 }

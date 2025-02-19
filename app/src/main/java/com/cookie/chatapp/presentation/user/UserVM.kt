@@ -70,10 +70,10 @@ class UserVM @Inject constructor(
         }
         userRepository.registerUser(UserModel(
             username = username,
-            firstName = email,
-            lastName = password,
-            email = firstName,
-            password = lastName
+            firstName = firstName,
+            lastName = lastName,
+            email = email,
+            password = password
         ))
     }
 }
