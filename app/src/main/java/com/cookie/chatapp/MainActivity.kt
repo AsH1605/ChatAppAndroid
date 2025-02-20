@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val userVM: LoginVM by viewModels()
         enableEdgeToEdge()
         setContent {
             ChatAppTheme {
