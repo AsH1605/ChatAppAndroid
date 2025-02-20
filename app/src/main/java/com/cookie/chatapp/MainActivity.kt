@@ -20,9 +20,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ChatAppTheme {
-                UserLoginScreen(userVM)
+                App()
             }
-
         }
     }
 }

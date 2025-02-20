@@ -6,6 +6,7 @@ import com.cookie.chatapp.data.local.entities.UserEntity
 import com.cookie.chatapp.data.remote.UserApi
 import com.cookie.chatapp.data.remote.dto.user.UserLoginRequest
 import com.cookie.chatapp.data.remote.dto.user.UserRegisterRequest
+import com.cookie.chatapp.domain.manager.PreferenceManager
 import com.cookie.chatapp.domain.models.UserModel
 import com.cookie.chatapp.domain.repository.UserRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,6 +17,7 @@ import retrofit2.HttpException
 class UserRepositoryImpl(
     private val userDao: UserDao,
     private val userApi: UserApi,
+    private val preferenceManager: PreferenceManager,
     private val ioDIspatcher: CoroutineDispatcher = Dispatchers.IO
 ): UserRepository {
 
@@ -55,5 +57,18 @@ class UserRepositoryImpl(
             Log.e("Impl", e.message())
             false
         }
+    }
+
+    override suspend fun getLoggedInUserId(): Int? {
+        return withContext(
+            context = ioDIspatcher,
+            block = {
+                preferenceManager.getLoggedInUserId()
+            }
+        )
+    }
+
+    override suspend fun logoutUser() = withContext(ioDIspatcher){
+        preferenceManager.setLoggedInWorker(null)
     }
 }

@@ -5,8 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.cookie.chatapp.domain.repository.UserRepository
 import com.cookie.chatapp.presentation.login.model.UiEvent
 import com.cookie.chatapp.presentation.login.model.UiState
+import com.cookie.chatapp.presentation.login.model.VmEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,6 +22,9 @@ class LoginVM @Inject constructor(
     private val _uiState = MutableStateFlow(UiState("", "", null))
     val uiState = _uiState.asStateFlow()
 
+    private val _vmEvent = MutableSharedFlow<VmEvent>()
+    val vmEvent = _vmEvent.asSharedFlow()
+
     fun onUiEvent(uiEvent: UiEvent){
         when(uiEvent){
             UiEvent.OnDismissError -> {
@@ -30,7 +36,11 @@ class LoginVM @Inject constructor(
             is UiEvent.OnPasswordChange -> {
                 _uiState.update { it.copy(password = uiEvent.updatedPassword) }
             }
-            UiEvent.OnRegisterClicked -> {}
+            UiEvent.OnRegisterClicked -> {
+                viewModelScope.launch {
+                    _vmEvent.emit(VmEvent.NavigateToRegisterScreen)
+                }
+            }
             is UiEvent.OnUsernameChange -> {
                 _uiState.update { it.copy(username = uiEvent.updatedUsername) }
             }
@@ -44,6 +54,12 @@ class LoginVM @Inject constructor(
             _uiState.update { it.copy(error = "All fields are required") }
             return
         }
-        userRepository.loginUser(username, password)
+        val response = userRepository.loginUser(username, password)
+        if (!response){
+            _vmEvent.emit(VmEvent.NavigateToRegisterScreen)
+        }
+        else{
+            _vmEvent.emit(VmEvent.NavigateToRoomScreen)
+        }
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -24,13 +25,24 @@ import androidx.compose.ui.unit.dp
 import com.cookie.chatapp.R
 import com.cookie.chatapp.presentation.login.model.UiEvent
 import com.cookie.chatapp.presentation.login.model.UiState
+import com.cookie.chatapp.presentation.login.model.VmEvent
 import com.cookie.chatapp.presentation.theme.ChatAppTheme
 
 @Composable
 fun UserLoginScreen(
-    viewModel: LoginVM
+    viewModel: LoginVM,
+    navigateToRegisterScreen: () -> Unit,
+    navigateToRoomScreen: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.vmEvent.collect(collector = {event->
+            when(event){
+                VmEvent.NavigateToRegisterScreen -> navigateToRegisterScreen()
+                VmEvent.NavigateToRoomScreen -> navigateToRoomScreen()
+            }
+        })
+    }
     UserLoginScreen(
         uiState = uiState,
         onUiEvent = {event->

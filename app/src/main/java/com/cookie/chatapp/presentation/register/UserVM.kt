@@ -6,8 +6,11 @@ import com.cookie.chatapp.domain.models.UserModel
 import com.cookie.chatapp.domain.repository.UserRepository
 import com.cookie.chatapp.presentation.register.model.UiEvent
 import com.cookie.chatapp.presentation.register.model.UiState
+import com.cookie.chatapp.presentation.register.model.VmEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,6 +31,9 @@ class UserVM @Inject constructor(
         )
     )
     val uiState = _uiState.asStateFlow()
+
+    private val _vmEvent = MutableSharedFlow<VmEvent>()
+    val vmEvent = _vmEvent.asSharedFlow()
 
     fun onUiEvent(uiEvent: UiEvent){
         when(uiEvent){
@@ -68,12 +74,15 @@ class UserVM @Inject constructor(
             _uiState.update { it.copy(error = "All fields are required") }
             return
         }
-        userRepository.registerUser(UserModel(
+        val response = userRepository.registerUser(UserModel(
             username = username,
             firstName = firstName,
             lastName = lastName,
             email = email,
             password = password
         ))
+        if(response){
+            _vmEvent.emit(VmEvent.NavigateToLoginScreen)
+        }
     }
 }
