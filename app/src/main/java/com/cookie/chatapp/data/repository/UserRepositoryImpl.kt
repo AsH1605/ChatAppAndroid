@@ -59,7 +59,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun getLoggedInUserId(): Int? {
+    override suspend fun getLoggedInUserId(): String? {
         return withContext(
             context = ioDIspatcher,
             block = {

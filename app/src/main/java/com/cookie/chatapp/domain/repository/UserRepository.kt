@@ -8,7 +8,7 @@ interface UserRepository {
 
     suspend fun loginUser(username: String, password: String): Boolean
 
-    suspend fun getLoggedInUserId(): Int?
+    suspend fun getLoggedInUserId(): String?
 
     suspend fun logoutUser()
 }
