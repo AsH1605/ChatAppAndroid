@@ -18,10 +18,10 @@ class UserRepositoryImpl(
     private val userDao: UserDao,
     private val userApi: UserApi,
     private val preferenceManager: PreferenceManager,
-    private val ioDIspatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ): UserRepository {
 
-    override suspend fun registerUser(user: UserModel):Boolean= withContext(ioDIspatcher) {
+    override suspend fun registerUser(user: UserModel):Boolean= withContext(ioDispatcher) {
         try {
             val request = UserRegisterRequest(
                 user.username,
@@ -38,7 +38,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun loginUser(username: String, password: String): Boolean = withContext(ioDIspatcher){
+    override suspend fun loginUser(username: String, password: String): Boolean = withContext(ioDispatcher){
         try {
             val request = UserLoginRequest(
                 username = username,
@@ -61,14 +61,14 @@ class UserRepositoryImpl(
 
     override suspend fun getLoggedInUserId(): String? {
         return withContext(
-            context = ioDIspatcher,
+            context = ioDispatcher,
             block = {
                 preferenceManager.getLoggedInUserId()
             }
         )
     }
 
-    override suspend fun logoutUser() = withContext(ioDIspatcher){
+    override suspend fun logoutUser() = withContext(ioDispatcher){
         preferenceManager.setLoggedInWorker(null)
     }
 }

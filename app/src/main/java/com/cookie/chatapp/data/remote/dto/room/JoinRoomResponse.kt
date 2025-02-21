@@ -2,7 +2,7 @@ package com.cookie.chatapp.data.remote.dto.room
 
 data class JoinRoomResponse(
     val status: String,
-    val data: RoomResponse
+    val data: GetRoomResponse
 )
 
 //{

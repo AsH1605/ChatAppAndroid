@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.cookie.chatapp.presentation.allRoom.AllRoomVM
 import com.cookie.chatapp.presentation.login.LoginVM
 import com.cookie.chatapp.presentation.login.UserLoginScreen
 import com.cookie.chatapp.presentation.register.UserRegistrationScreen
@@ -55,6 +56,10 @@ fun App() {
                     }
                 }
             )
+        }
+
+        composable(route = "all_room_screen") {
+            val viewModel = hiltViewModel<AllRoomVM>()
         }
     }
 }

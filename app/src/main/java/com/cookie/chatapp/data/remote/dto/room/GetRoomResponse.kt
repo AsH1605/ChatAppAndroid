@@ -43,19 +43,3 @@ data class RoomUser(
 //        "updatedAt": "2025-02-20T17:01:51.924Z",
 //        "__v": 0
 //    }
-
-
-//@Serializable
-//data class RoomResponse(
-//    val code: String,
-//    val description: String?,
-//    val lastActivity: String?,
-//    val lastMessagePreview: String?,
-//    val users: List<RoomUser>
-//)
-//
-//@Serializable
-//data class RoomUser(
-//    val user: User,
-//    val unread: Int?
-//)
