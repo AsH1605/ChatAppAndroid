@@ -20,18 +20,32 @@ import javax.inject.Inject
 class AllRoomVM @Inject constructor(
     private val allRoomRepository: AllRoomRepository,
     private val userRepository: UserRepository
-): ViewModel(){
-    private val _uiState = MutableStateFlow(UiState("", listOf(), false))
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(UiState(
+        "",
+        listOf(),
+        false,
+        false,
+        false,
+        "",
+        "",
+        false
+    ))
     val uiState = _uiState.asStateFlow()
 
     private val _vmEvent = MutableSharedFlow<VmEvent>()
     val vmEvent = _vmEvent.asSharedFlow()
 
-    fun onUiEvent(uiEvent: UiEvent){
-        when(uiEvent){
-            UiEvent.OnAddClicked -> {
-                allRoomRepository
+    fun onUiEvent(uiEvent: UiEvent) {
+        when (uiEvent) {
+            UiEvent.OnFabClicked -> {
+                _uiState.update {
+                    it.copy(
+                        isExpanded = !it.isExpanded
+                    )
+                }
             }
+
             UiEvent.OnProfileClicked -> {
                 _uiState.update {
                     it.copy(
@@ -39,11 +53,67 @@ class AllRoomVM @Inject constructor(
                     )
                 }
             }
-            is UiEvent.OnRoomClicked -> TODO()
+
+            is UiEvent.OnRoomClicked -> {}
             UiEvent.OnLogoutClicked -> {
                 viewModelScope.launch {
                     userRepository.logoutUser()
                     _vmEvent.emit(VmEvent.NavigateToLoginScreen)
+                }
+            }
+
+            is UiEvent.OnJoinRoomClicked ->
+                viewModelScope.launch {
+                    if (uiState.value.roomCode != ""){
+                        allRoomRepository.joinRoom(uiState.value.roomCode)
+                        loadRooms()
+                    }
+                    _uiState.update {
+                        it.copy(
+                            isJoinRoomDialogVisible = !it.isJoinRoomDialogVisible
+                        )
+                    }
+                }
+            is UiEvent.OnCreateRoomClicked ->
+                viewModelScope.launch {
+                    if (uiState.value.description != ""){
+                        allRoomRepository.createRoom(uiState.value.description)
+                        loadRooms()
+                    }
+
+                    _uiState.update {
+                        it.copy(
+                            isCreateRoomDialogVisible = !it.isCreateRoomDialogVisible
+                        )
+                }
+            }
+            UiEvent.OnCreateDialogButtonClicked -> {
+                _uiState.update {
+                    it.copy(
+                        isCreateRoomDialogVisible = !it.isCreateRoomDialogVisible
+                    )
+                }
+            }
+            UiEvent.OnJoinDialogButtonClicked -> {
+                _uiState.update {
+                    it.copy(
+                        isJoinRoomDialogVisible = !it.isJoinRoomDialogVisible
+                    )
+                }
+            }
+
+            is UiEvent.OnDescriptionUpdate -> {
+                _uiState.update {
+                    it.copy(
+                        description = uiEvent.description
+                    )
+                }
+            }
+            is UiEvent.OnRoomCodeUpdate -> {
+                _uiState.update {
+                    it.copy(
+                        roomCode = uiEvent.roomCode
+                    )
                 }
             }
         }
@@ -55,6 +125,15 @@ class AllRoomVM @Inject constructor(
         }
     }
 
+    private suspend fun loadRooms(){
+        val rooms = allRoomRepository.getAllRooms()
+        _uiState.update {
+            it.copy(
+                room = rooms
+            )
+        }
+    }
+
     private suspend fun initUiState() {
         val username = userRepository.getUsername()
         val room = allRoomRepository.getAllRooms()
@@ -63,6 +142,11 @@ class AllRoomVM @Inject constructor(
                 username = username,
                 room = room,
                 isContextMenuVisible = false,
+                isJoinRoomDialogVisible = false,
+                isCreateRoomDialogVisible = false,
+                roomCode = "",
+                description = "",
+                isExpanded = false,
             )
         }
     }

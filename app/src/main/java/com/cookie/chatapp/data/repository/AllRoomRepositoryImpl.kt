@@ -5,6 +5,8 @@ import com.cookie.chatapp.data.local.dao.UserDao
 import com.cookie.chatapp.data.mapper.toRoom
 import com.cookie.chatapp.data.mapper.toRoomModel
 import com.cookie.chatapp.data.remote.AllRoomApi
+import com.cookie.chatapp.data.remote.dto.room.AnyRoomRequest
+import com.cookie.chatapp.data.remote.dto.room.CreateRoomRequest
 import com.cookie.chatapp.domain.manager.PreferenceManager
 import com.cookie.chatapp.domain.models.RoomModel
 import com.cookie.chatapp.domain.repository.AllRoomRepository
@@ -36,11 +38,11 @@ class AllRoomRepositoryImpl(
         }
     }
 
-    override suspend fun deleteRoom(code: Int): Boolean = withContext(ioDispatcher){
+    override suspend fun deleteRoom(code: String): Boolean = withContext(ioDispatcher){
         try {
             val userId = preferenceManager.getLoggedInUserId()!!
             val idToken = userDao.getIdToken(userId)
-            val response = allRoomApi.deleteRoom(idToken, code.toString())
+            val response = allRoomApi.deleteRoom(idToken, AnyRoomRequest(code))
             if (response.status == "success"){
                 true
             }
@@ -53,11 +55,11 @@ class AllRoomRepositoryImpl(
         }
     }
 
-    override suspend fun leaveRoom(code: Int): Boolean = withContext(ioDispatcher){
+    override suspend fun leaveRoom(code: String): Boolean = withContext(ioDispatcher){
         try{
             val userId = preferenceManager.getLoggedInUserId()!!
             val idToken = userDao.getIdToken(userId)
-            val response = allRoomApi.leaveRoom(idToken, code.toString())
+            val response = allRoomApi.leaveRoom(idToken, AnyRoomRequest(code))
             if (response.status == "success"){
                 true
             }
@@ -74,19 +76,20 @@ class AllRoomRepositoryImpl(
         try{
             val userId = preferenceManager.getLoggedInUserId()!!
             val idToken = userDao.getIdToken(userId)
-            val response = allRoomApi.createRoom(idToken, description)
-            response.toRoomModel(userId)
+
+            val response = allRoomApi.createRoom(idToken, CreateRoomRequest(description))
+            response.data.room.toRoomModel(userId)
         }catch (e: HttpException){
             null
         }
     }
 
-    override suspend fun joinRoom(code: Int): RoomModel? = withContext(ioDispatcher){
+    override suspend fun joinRoom(code: String): RoomModel? = withContext(ioDispatcher){
         try{
             val userId = preferenceManager.getLoggedInUserId()!!
             val idToken = userDao.getIdToken(userId)
-            val response = allRoomApi.joinRoom(idToken, code.toString())
-            response.data.toRoomModel(userId)
+            val response = allRoomApi.joinRoom(idToken, AnyRoomRequest(code))
+            response.data.room.toRoomModel(userId)
         }catch (e: HttpException){
             null
         }

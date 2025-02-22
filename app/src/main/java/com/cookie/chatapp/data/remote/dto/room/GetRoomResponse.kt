@@ -5,6 +5,17 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class CreateRoomResponse(
+    val status: String,
+    val data: RoomMiddle
+)
+
+@Serializable
+data class RoomMiddle(
+    val room: GetRoomResponse
+)
+
+@Serializable
 data class GetRoomResponse(
     @SerialName("_id") val id: String,
     val code: String,

@@ -2,15 +2,18 @@ package com.cookie.chatapp
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.cookie.chatapp.presentation.allRoom.AllRoomScreen
 import com.cookie.chatapp.presentation.allRoom.AllRoomVM
 import com.cookie.chatapp.presentation.login.LoginVM
 import com.cookie.chatapp.presentation.login.UserLoginScreen
 import com.cookie.chatapp.presentation.register.UserRegistrationScreen
 import com.cookie.chatapp.presentation.register.UserVM
+import com.cookie.chatapp.presentation.room.RoomScreen
 import com.cookie.chatapp.presentation.splash.SplashScreen
 import com.cookie.chatapp.presentation.splash.SplashVM
 
@@ -41,11 +44,7 @@ fun App() {
             UserLoginScreen(
                 viewModel = viewModel,
                 navigateToRegisterScreen = {
-                    navController.navigate("user_register_screen"){
-                        popUpTo("user_login_screen"){
-                            inclusive = true
-                        }
-                    }
+                    navController.navigate("user_register_screen")
                 },
                 navigateToRoomScreen = {
                     navController.navigate("all_room_screen"){
@@ -82,8 +81,20 @@ fun App() {
                         }
                     }
                 },
-                navigateToRoomScreen = {}
+                navigateToRoomScreen = {
+                    navController.navigate("room_screen")
+                }
             )
+        }
+
+        composable(route = "room_screen?code={code}") {listOf(navArgument(
+            name = "noteId",
+            builder = {
+                type = NavType.IntType
+                nullable = false
+            },
+            ))
+            RoomScreen()
         }
     }
 }

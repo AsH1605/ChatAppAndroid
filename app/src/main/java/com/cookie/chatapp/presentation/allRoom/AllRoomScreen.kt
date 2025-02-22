@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -33,6 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cookie.chatapp.domain.models.RoomModel
+import com.cookie.chatapp.presentation.allRoom.component.AddRoomDialog
+import com.cookie.chatapp.presentation.allRoom.model.OptionModel
 import com.cookie.chatapp.presentation.allRoom.model.UiEvent
 import com.cookie.chatapp.presentation.allRoom.model.UiState
 import com.cookie.chatapp.presentation.allRoom.model.VmEvent
@@ -42,14 +45,13 @@ import com.cookie.chatapp.presentation.theme.ChatAppTheme
 fun AllRoomScreen(
     viewmodel: AllRoomVM,
     navigateToLoginScreen: () -> Unit,
-    navigateToRoomScreen: () -> Unit
+    navigateToRoomScreen: (String) -> Unit
 ) {
     val uiState by viewmodel.uiState.collectAsState()
     LaunchedEffect(Unit) {
         viewmodel.vmEvent.collect(collector = {event->
             when(event){
                 VmEvent.NavigateToLoginScreen -> navigateToLoginScreen()
-                VmEvent.NavigateToRoomScreen -> navigateToRoomScreen()
             }
         })
     }
@@ -57,13 +59,46 @@ fun AllRoomScreen(
         uiState = uiState,
         onUiEvent = { event ->
             when (event) {
-                is UiEvent.OnRoomClicked -> TODO()
-                else->{
-                    viewmodel.onUiEvent(event)
+                is UiEvent.OnRoomClicked -> {
+                    navigateToRoomScreen(event.code)
                 }
+
+                UiEvent.OnCreateDialogButtonClicked -> {viewmodel.onUiEvent(event)}
+                UiEvent.OnCreateRoomClicked -> {viewmodel.onUiEvent(event)}
+                UiEvent.OnFabClicked -> {viewmodel.onUiEvent(event)}
+                UiEvent.OnJoinDialogButtonClicked -> {viewmodel.onUiEvent(event)}
+                UiEvent.OnJoinRoomClicked -> {viewmodel.onUiEvent(event)}
+                UiEvent.OnLogoutClicked -> {viewmodel.onUiEvent(event)}
+                UiEvent.OnProfileClicked -> {viewmodel.onUiEvent(event)}
+                is UiEvent.OnDescriptionUpdate -> {viewmodel.onUiEvent(event)}
+                is UiEvent.OnRoomCodeUpdate -> {viewmodel.onUiEvent(event)}
             }
         }
     )
+    if (uiState.isCreateRoomDialogVisible){
+        AddRoomDialog(
+            onDismissRequest = { viewmodel.onUiEvent(UiEvent.OnCreateDialogButtonClicked) },
+            content = "Description",
+            action = "Create",
+            onValueUpdate = { updatedValue->
+                viewmodel.onUiEvent(UiEvent.OnDescriptionUpdate(updatedValue))
+                            },
+            onClickEvent = { viewmodel.onUiEvent(UiEvent.OnCreateRoomClicked) },
+            value = uiState.description,
+        )
+    }
+    if (uiState.isJoinRoomDialogVisible){
+        AddRoomDialog(
+            onDismissRequest = { viewmodel.onUiEvent(UiEvent.OnJoinDialogButtonClicked) },
+            content = "Code",
+            action = "Join",
+            onValueUpdate = { updatedValue->
+                viewmodel.onUiEvent(UiEvent.OnRoomCodeUpdate(updatedValue))
+                            },
+            onClickEvent = { viewmodel.onUiEvent(UiEvent.OnJoinRoomClicked) },
+            value = uiState.roomCode
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,18 +142,26 @@ private fun AllRoomScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    onUiEvent(UiEvent.OnAddClicked)
-                },
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add note",
-                    modifier = Modifier.size(23.dp)
-                )
-            }
+            CustomizedFabButton(
+                isExpanded = uiState.isExpanded,
+                onAddClicked = {onUiEvent(UiEvent.OnFabClicked)},
+                options = listOf(
+                    OptionModel(
+                        "Create",
+                        Icons.Default.Add
+                    ),
+                    OptionModel(
+                        "Join",
+                        Icons.Default.KeyboardArrowRight
+                    )
+                ),
+                onItemClicked = {idx->
+                    when(idx){
+                        0-> {onUiEvent(UiEvent.OnCreateDialogButtonClicked)}
+                        1-> {onUiEvent(UiEvent.OnJoinDialogButtonClicked)}
+                    }
+                }
+            )
         }
     ) { padding ->
         Column(
@@ -181,7 +224,12 @@ private fun AllRoomScreenPrev() {
                         totalMessages = 4
                     )
                 ),
-                isContextMenuVisible = false
+                isContextMenuVisible = false,
+                isJoinRoomDialogVisible = false,
+                isCreateRoomDialogVisible = false,
+                roomCode = "",
+                description = "",
+                isExpanded = false,
             ),
             onUiEvent = {}
         )
@@ -205,7 +253,12 @@ private fun AllRoomScreenPrev2() {
                         totalMessages = 4
                     )
                 ),
-                isContextMenuVisible = false
+                isContextMenuVisible = false,
+                isJoinRoomDialogVisible = false,
+                isCreateRoomDialogVisible = false,
+                roomCode = "",
+                description = "",
+                isExpanded = false
             ),
             onUiEvent = {}
         )

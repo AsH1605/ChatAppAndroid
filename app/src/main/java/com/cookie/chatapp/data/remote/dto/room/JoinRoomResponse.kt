@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class JoinRoomResponse(
     val status: String,
-    val data: GetRoomResponse
+    val data: RoomMiddle
 )
 
 //{
