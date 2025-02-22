@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -22,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -33,18 +35,32 @@ import androidx.compose.ui.unit.sp
 import com.cookie.chatapp.domain.models.RoomModel
 import com.cookie.chatapp.presentation.allRoom.model.UiEvent
 import com.cookie.chatapp.presentation.allRoom.model.UiState
+import com.cookie.chatapp.presentation.allRoom.model.VmEvent
 import com.cookie.chatapp.presentation.theme.ChatAppTheme
 
 @Composable
-fun AllRoomScreen(viewmodel: AllRoomVM) {
+fun AllRoomScreen(
+    viewmodel: AllRoomVM,
+    navigateToLoginScreen: () -> Unit,
+    navigateToRoomScreen: () -> Unit
+) {
     val uiState by viewmodel.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        viewmodel.vmEvent.collect(collector = {event->
+            when(event){
+                VmEvent.NavigateToLoginScreen -> navigateToLoginScreen()
+                VmEvent.NavigateToRoomScreen -> navigateToRoomScreen()
+            }
+        })
+    }
     AllRoomScreen(
         uiState = uiState,
-        onUiEvent = {event->
-            when(event){
-                UiEvent.OnAddClicked -> TODO()
-                UiEvent.OnProfileClicked -> TODO()
+        onUiEvent = { event ->
+            when (event) {
                 is UiEvent.OnRoomClicked -> TODO()
+                else->{
+                    viewmodel.onUiEvent(event)
+                }
             }
         }
     )
@@ -76,13 +92,13 @@ private fun AllRoomScreen(
                         )
                     }
                     DropdownMenu(
-                        expanded = false,
-                        onDismissRequest = {  } //FIXME
+                        expanded = uiState.isContextMenuVisible,
+                        onDismissRequest = { onUiEvent(UiEvent.OnProfileClicked)}
                     ) {
-//                        DropdownMenuItem(
-//                            text = { Text("Logout" ) },
-//                            onClick = { onUiEvent(UiEvent.OnLogoutClicked) }
-//                        )
+                        DropdownMenuItem(
+                            text = { Text("Logout" ) },
+                            onClick = { onUiEvent(UiEvent.OnLogoutClicked) }
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -104,12 +120,12 @@ private fun AllRoomScreen(
                 )
             }
         }
-    ){padding->
+    ) { padding ->
         Column(
             modifier = Modifier.padding(padding)
         ) {
             LazyColumn {
-                items(uiState.room){room->
+                items(uiState.room) { room ->
                     Room(
                         room.code, room.totalMessages,
                         onClick = { onUiEvent(UiEvent.OnRoomClicked(room.code)) }
@@ -164,7 +180,8 @@ private fun AllRoomScreenPrev() {
                         code = "eg425",
                         totalMessages = 4
                     )
-                )
+                ),
+                isContextMenuVisible = false
             ),
             onUiEvent = {}
         )
@@ -187,7 +204,8 @@ private fun AllRoomScreenPrev2() {
                         code = "eg425",
                         totalMessages = 4
                     )
-                )
+                ),
+                isContextMenuVisible = false
             ),
             onUiEvent = {}
         )

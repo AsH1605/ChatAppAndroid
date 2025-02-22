@@ -41,10 +41,18 @@ fun App() {
             UserLoginScreen(
                 viewModel = viewModel,
                 navigateToRegisterScreen = {
-                    navController.navigate("user_register_screen")
+                    navController.navigate("user_register_screen"){
+                        popUpTo("user_login_screen"){
+                            inclusive = true
+                        }
+                    }
                 },
                 navigateToRoomScreen = {
-                    navController.navigate("all_room_screen")
+                    navController.navigate("all_room_screen"){
+                        popUpTo("user_login_screen"){
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -65,7 +73,17 @@ fun App() {
 
         composable(route = "all_room_screen") {
             val viewModel = hiltViewModel<AllRoomVM>()
-            AllRoomScreen(viewModel)
+            AllRoomScreen(
+                viewModel,
+                navigateToLoginScreen = {
+                    navController.navigate("user_login_screen"){
+                        popUpTo("all_room_screen"){
+                            inclusive = true
+                        }
+                    }
+                },
+                navigateToRoomScreen = {}
+            )
         }
     }
 }
