@@ -22,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,9 +35,24 @@ import com.cookie.chatapp.presentation.allRoom.model.UiEvent
 import com.cookie.chatapp.presentation.allRoom.model.UiState
 import com.cookie.chatapp.presentation.theme.ChatAppTheme
 
+@Composable
+fun AllRoomScreen(viewmodel: AllRoomVM) {
+    val uiState by viewmodel.uiState.collectAsState()
+    AllRoomScreen(
+        uiState = uiState,
+        onUiEvent = {event->
+            when(event){
+                UiEvent.OnAddClicked -> TODO()
+                UiEvent.OnProfileClicked -> TODO()
+                is UiEvent.OnRoomClicked -> TODO()
+            }
+        }
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AllRoomScreen(
+private fun AllRoomScreen(
     uiState: UiState,
     onUiEvent: (UiEvent) -> Unit
 ) {

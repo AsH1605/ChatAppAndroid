@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.cookie.chatapp.presentation.allRoom.AllRoomScreen
 import com.cookie.chatapp.presentation.allRoom.AllRoomVM
 import com.cookie.chatapp.presentation.login.LoginVM
 import com.cookie.chatapp.presentation.login.UserLoginScreen
@@ -22,7 +23,9 @@ fun App() {
             val viewModel = hiltViewModel<SplashVM>()
             SplashScreen(
                 viewModel = viewModel,
-                navigateToRoomScreen = {},
+                navigateToRoomScreen = {
+                    navController.navigate("all_room_screen")
+                },
                 navigateToLoginScreen = {
                     navController.navigate("user_login_screen"){
                         popUpTo("splash_screen"){
@@ -40,7 +43,9 @@ fun App() {
                 navigateToRegisterScreen = {
                     navController.navigate("user_register_screen")
                 },
-                navigateToRoomScreen = {}
+                navigateToRoomScreen = {
+                    navController.navigate("all_room_screen")
+                }
             )
         }
 
@@ -60,6 +65,7 @@ fun App() {
 
         composable(route = "all_room_screen") {
             val viewModel = hiltViewModel<AllRoomVM>()
+            AllRoomScreen(viewModel)
         }
     }
 }

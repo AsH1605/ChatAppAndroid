@@ -1,11 +1,15 @@
 package com.cookie.chatapp.di
 
+import com.cookie.chatapp.data.remote.AllRoomApi
 import com.cookie.chatapp.data.remote.UserApi
+import com.cookie.chatapp.data.remote.interceptor.IdTokenInterceptor
+import com.cookie.chatapp.domain.util.json
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -20,11 +24,18 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient(): OkHttpClient{
+    fun provideIdTokenInterceptor(): IdTokenInterceptor{
+        return IdTokenInterceptor()
+    }
+
+    @Provides
+    @Singleton
+    fun provideHttpClient(idTokenInterceptor: IdTokenInterceptor): OkHttpClient{
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
+            .addInterceptor(idTokenInterceptor)
             .build()
     }
 
@@ -35,7 +46,7 @@ object ApiModule {
             .baseUrl("http://192.168.0.182:8080/api/v1/")
             .client(client)
             .addConverterFactory(
-                Json.asConverterFactory(
+                json.asConverterFactory(
                     "application/json; charset=utf-8".toMediaType()
                 )
             )
@@ -45,6 +56,12 @@ object ApiModule {
     @Provides
     @Singleton
     fun provideUserApi(retrofit: Retrofit): UserApi{
+        return retrofit.create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAllRoomApi(retrofit: Retrofit): AllRoomApi{
         return retrofit.create()
     }
 }

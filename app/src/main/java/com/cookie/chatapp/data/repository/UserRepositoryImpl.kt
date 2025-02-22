@@ -51,8 +51,13 @@ class UserRepositoryImpl(
                     username = response.data.user.username,
                     idToken = response.idToken
                 ))
+                preferenceManager.setLoggedInWorker(response.data.user.id)
+                true
             }
-            true
+            else{
+                false
+            }
+//            Log.d("Impl", response.data.user.id)
         }catch (e: HttpException){
             Log.e("Impl", e.message())
             false
@@ -70,5 +75,11 @@ class UserRepositoryImpl(
 
     override suspend fun logoutUser() = withContext(ioDispatcher){
         preferenceManager.setLoggedInWorker(null)
+    }
+
+    override suspend fun getUsername(): String {
+        val userId = preferenceManager.getLoggedInUserId()!!
+        Log.d("UserId", userId)
+        return userDao.getUsername(userId)
     }
 }

@@ -54,8 +54,8 @@ class LoginVM @Inject constructor(
             _uiState.update { it.copy(error = "All fields are required") }
             return
         }
-        val response = userRepository.loginUser(username, password)
-        if (!response){
+        val loginSuccessful = userRepository.loginUser(username, password)
+        if (!loginSuccessful){
             _vmEvent.emit(VmEvent.NavigateToRegisterScreen)
         }
         else{

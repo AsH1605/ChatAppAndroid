@@ -27,7 +27,7 @@ class PreferencesManagerImpl(context: Context): PreferenceManager {
                 prefs.remove(PreferenceKeys.loggedInUserKey)
             }
             else{
-                prefs[PreferenceKeys.loggedInUserKey]
+                prefs[PreferenceKeys.loggedInUserKey] = id
             }
         }
     }

@@ -13,5 +13,11 @@ interface UserDao {
     suspend fun addUser(userEntity: UserEntity)
 
     @Query("SELECT * FROM userentity WHERE userId = :userId")
-    suspend fun getUserById(userId: Int): UserEntity
+    suspend fun getUserById(userId: String): UserEntity
+
+    @Query("SELECT idToken FROM userentity WHERE userId = :userId")
+    suspend fun getIdToken(userId: String): String
+
+    @Query("SELECT username FROM userentity WHERE userId = :userId")
+    suspend fun getUsername(userId: String): String
 }
