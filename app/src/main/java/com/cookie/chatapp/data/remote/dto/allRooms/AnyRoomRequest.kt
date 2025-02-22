@@ -1,4 +1,4 @@
-package com.cookie.chatapp.data.remote.dto.room
+package com.cookie.chatapp.data.remote.dto.allRooms
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -5,8 +5,8 @@ import com.cookie.chatapp.data.local.dao.UserDao
 import com.cookie.chatapp.data.mapper.toRoom
 import com.cookie.chatapp.data.mapper.toRoomModel
 import com.cookie.chatapp.data.remote.AllRoomApi
-import com.cookie.chatapp.data.remote.dto.room.AnyRoomRequest
-import com.cookie.chatapp.data.remote.dto.room.CreateRoomRequest
+import com.cookie.chatapp.data.remote.dto.allRooms.AnyRoomRequest
+import com.cookie.chatapp.data.remote.dto.allRooms.CreateRoomRequest
 import com.cookie.chatapp.domain.manager.PreferenceManager
 import com.cookie.chatapp.domain.models.RoomModel
 import com.cookie.chatapp.domain.repository.AllRoomRepository

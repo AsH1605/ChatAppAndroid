@@ -1,6 +1,7 @@
 package com.cookie.chatapp.di
 
 import com.cookie.chatapp.data.remote.AllRoomApi
+import com.cookie.chatapp.data.remote.RoomApi
 import com.cookie.chatapp.data.remote.UserApi
 import com.cookie.chatapp.data.remote.interceptor.IdTokenInterceptor
 import com.cookie.chatapp.domain.util.json
@@ -8,8 +9,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.json.Json
-import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -62,6 +61,12 @@ object ApiModule {
     @Provides
     @Singleton
     fun provideAllRoomApi(retrofit: Retrofit): AllRoomApi{
+        return retrofit.create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRoomApi(retrofit: Retrofit): RoomApi{
         return retrofit.create()
     }
 }

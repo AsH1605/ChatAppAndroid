@@ -1,23 +1,17 @@
-package com.cookie.chatapp.data.remote.dto.room
+package com.cookie.chatapp.data.remote.dto.allRooms
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GetAllRoomResponse(
+data class JoinRoomResponse(
     val status: String,
-    val data: RoomResponse
-)
-
-@Serializable
-data class RoomResponse(
-    val rooms: List<GetRoomResponse>
+    val data: RoomMiddle
 )
 
 //{
 //    "status": "success",
 //    "data": {
-//    "rooms": [
-//    {
+//    "room": {
 //        "_id": "67b75fffc0dbf75803745fa8",
 //        "code": "g9vKxS",
 //        "description": "New room",
@@ -49,6 +43,5 @@ data class RoomResponse(
 //        "updatedAt": "2025-02-20T17:51:51.587Z",
 //        "__v": 1
 //    }
-//    ]
 //}
 //}

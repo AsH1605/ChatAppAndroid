@@ -1,7 +1,7 @@
 package com.cookie.chatapp.data.mapper
 
-import com.cookie.chatapp.data.remote.dto.room.GetAllRoomResponse
-import com.cookie.chatapp.data.remote.dto.room.GetRoomResponse
+import com.cookie.chatapp.data.remote.dto.allRooms.GetAllRoomResponse
+import com.cookie.chatapp.data.remote.dto.allRooms.GetRoomResponse
 import com.cookie.chatapp.domain.models.RoomModel
 
 fun GetAllRoomResponse.toRoom(userId: String) : List<RoomModel>{

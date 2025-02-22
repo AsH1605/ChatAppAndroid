@@ -1,12 +1,12 @@
 package com.cookie.chatapp.data.remote
 
-import com.cookie.chatapp.data.remote.dto.room.CreateRoomRequest
-import com.cookie.chatapp.data.remote.dto.room.DeleteRoomResponse
-import com.cookie.chatapp.data.remote.dto.room.GetAllRoomResponse
-import com.cookie.chatapp.data.remote.dto.room.AnyRoomRequest
-import com.cookie.chatapp.data.remote.dto.room.CreateRoomResponse
-import com.cookie.chatapp.data.remote.dto.room.JoinRoomResponse
-import com.cookie.chatapp.data.remote.dto.room.LeaveRoomResponse
+import com.cookie.chatapp.data.remote.dto.allRooms.CreateRoomRequest
+import com.cookie.chatapp.data.remote.dto.allRooms.DeleteRoomResponse
+import com.cookie.chatapp.data.remote.dto.allRooms.GetAllRoomResponse
+import com.cookie.chatapp.data.remote.dto.allRooms.AnyRoomRequest
+import com.cookie.chatapp.data.remote.dto.allRooms.CreateRoomResponse
+import com.cookie.chatapp.data.remote.dto.allRooms.JoinRoomResponse
+import com.cookie.chatapp.data.remote.dto.allRooms.LeaveRoomResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
