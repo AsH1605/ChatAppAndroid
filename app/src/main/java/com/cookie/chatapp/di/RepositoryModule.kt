@@ -2,6 +2,7 @@ package com.cookie.chatapp.di
 
 import com.cookie.chatapp.data.local.dao.UserDao
 import com.cookie.chatapp.data.remote.AllRoomApi
+import com.cookie.chatapp.data.remote.RoomApi
 import com.cookie.chatapp.data.remote.UserApi
 import com.cookie.chatapp.data.repository.AllRoomRepositoryImpl
 import com.cookie.chatapp.data.repository.RoomRepositoryImpl
@@ -52,9 +53,16 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideRoomRespository(): RoomRepository{
+    fun provideRoomRespository(
+        preferenceManager: PreferenceManager,
+        userDao: UserDao,
+        api: RoomApi
+    ): RoomRepository{
         return RoomRepositoryImpl(
-            socket = IO.socket("http://192.168.0.182:8080")
+            socket = IO.socket("http://192.168.0.182:8080"),
+            preferenceManager = preferenceManager,
+            userDao = userDao,
+            roomApi = api
         )
     }
 }

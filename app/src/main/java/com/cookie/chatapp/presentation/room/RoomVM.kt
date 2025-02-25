@@ -11,10 +11,12 @@ import com.cookie.chatapp.domain.repository.UserRepository
 import com.cookie.chatapp.presentation.room.model.UiEvent
 import com.cookie.chatapp.presentation.room.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,8 +33,6 @@ class RoomVM @Inject constructor(
         userId = ""
     ))
 
-    private var allMessageList = mutableListOf<MessageModel>()
-
     val uiState = _uiState.asStateFlow()
 
     private val roomCode = saveState.get<String>("code")
@@ -44,7 +44,6 @@ class RoomVM @Inject constructor(
                 listenToRoomEvents()
             }
             initUiState()
-            roomRepository.sendMessage("RAXAWA","hi", "BDBDG")
         }
     }
 
@@ -55,7 +54,7 @@ class RoomVM @Inject constructor(
                 UiState(
                     roomCode = roomCode,
                     message = "",
-                    allMessages = allMessageList,
+                    allMessages = roomRepository.getAllMessages(roomCode),
                     userId = userId
                 )
             }
@@ -75,6 +74,11 @@ class RoomVM @Inject constructor(
                         message = message,
                     )
                 }
+                _uiState.update {
+                    it.copy(
+                        message = ""
+                    )
+                }
             }
             is UiEvent.OnMessageTyped -> {
                 _uiState.update { it.copy(
@@ -84,12 +88,11 @@ class RoomVM @Inject constructor(
         }
     }
 
-    private suspend fun listenToRoomEvents(){
+    private suspend fun listenToRoomEvents(): Unit = withContext(Dispatchers.IO){
         roomRepository.getRoomEvents().collect({roomEvent->
             when(roomEvent){
                 RoomEvent.Connected -> {Log.d("VM", "connected")}
                 is RoomEvent.MessageReceived -> {
-                    allMessageList.add(roomEvent.message)
                 }
                 is RoomEvent.UserJoined -> {Log.d("VM", "joined room ${roomEvent.userModel.username}")}
             }
