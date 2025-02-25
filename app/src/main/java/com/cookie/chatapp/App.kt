@@ -1,6 +1,8 @@
 package com.cookie.chatapp
 
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -22,7 +24,11 @@ import com.cookie.chatapp.presentation.splash.SplashVM
 fun App() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "splash_screen"){
+    NavHost(
+        navController = navController,
+        startDestination = "splash_screen",
+        modifier = Modifier.safeDrawingPadding()
+    ){
         composable(route = "splash_screen") {
             val viewModel = hiltViewModel<SplashVM>()
             SplashScreen(
@@ -82,8 +88,8 @@ fun App() {
                         }
                     }
                 },
-                navigateToRoomScreen = {
-                    navController.navigate("room_screen")
+                navigateToRoomScreen = {code->
+                    navController.navigate("room_screen?code=$code")
                 }
             )
         }
@@ -96,7 +102,12 @@ fun App() {
             },
             ))
             val viewModel = hiltViewModel<RoomVM>()
-            RoomScreen()
+            RoomScreen(
+                viewModel,
+                navigateUp = {
+                    navController.navigateUp()
+                }
+            )
         }
     }
 }

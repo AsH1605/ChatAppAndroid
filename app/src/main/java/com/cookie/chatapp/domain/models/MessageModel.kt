@@ -8,5 +8,6 @@ data class MessageModel (
     val status: String,
     val isSystem: Boolean,
     val userId: String,
-    val roomCode: String
+    val roomCode: String,
+    val username: String
 )
