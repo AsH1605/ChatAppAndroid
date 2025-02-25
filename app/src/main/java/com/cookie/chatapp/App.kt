@@ -14,6 +14,7 @@ import com.cookie.chatapp.presentation.login.UserLoginScreen
 import com.cookie.chatapp.presentation.register.UserRegistrationScreen
 import com.cookie.chatapp.presentation.register.UserVM
 import com.cookie.chatapp.presentation.room.RoomScreen
+import com.cookie.chatapp.presentation.room.RoomVM
 import com.cookie.chatapp.presentation.splash.SplashScreen
 import com.cookie.chatapp.presentation.splash.SplashVM
 
@@ -88,12 +89,13 @@ fun App() {
         }
 
         composable(route = "room_screen?code={code}") {listOf(navArgument(
-            name = "noteId",
+            name = "code",
             builder = {
-                type = NavType.IntType
+                type = NavType.StringType
                 nullable = false
             },
             ))
+            val viewModel = hiltViewModel<RoomVM>()
             RoomScreen()
         }
     }

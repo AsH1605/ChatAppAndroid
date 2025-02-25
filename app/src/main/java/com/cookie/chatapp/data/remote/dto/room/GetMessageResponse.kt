@@ -19,6 +19,6 @@ data class Message(
     val content: String,
     val status: String,
     val isSystem: Boolean,
-    val users: List<User>,
+    val user: User,
     val roomCode: String
 )
