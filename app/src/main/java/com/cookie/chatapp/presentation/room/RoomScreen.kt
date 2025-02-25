@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -178,19 +179,16 @@ private fun RoomScreen(
 
 @Composable
 private fun Message(username: String, msg: String, isSentByUser: Boolean) {
-    var rowWidth by remember { mutableStateOf(0.dp) }
-    val density = LocalDensity.current
+    val screenWidth = LocalConfiguration.current.screenWidthDp
     Row(
-        modifier = Modifier.fillMaxWidth().onGloballyPositioned { coords->
-            rowWidth = with(density){coords.size.width.toDp()}
-        },
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (isSentByUser) Arrangement.End else Arrangement.Start
     ) {
         Card(
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 6.dp
             ),
-            modifier = Modifier.widthIn(max = rowWidth.times(0.8f)).padding(4.dp),
+            modifier = Modifier.widthIn(max = screenWidth.dp.times(0.8f)).padding(4.dp),
             shape = RoundedCornerShape(4.dp),
         ) {
             Text(
