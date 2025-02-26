@@ -28,26 +28,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cookie.chatapp.presentation.room.components.MessageInputField
 import com.cookie.chatapp.presentation.room.model.UiEvent
 import com.cookie.chatapp.presentation.room.model.UiState
-import com.cookie.chatapp.presentation.theme.ChatAppTheme
 
 @Composable
 fun RoomScreen(
@@ -87,12 +79,12 @@ private fun RoomScreen(
                             fontSize = 20.sp,
                             modifier = Modifier.padding(top = 5.dp)
                         )
-//                        Spacer(Modifier.height(1.dp))
-//                        Text(
-//                            "Last activity",
-//                            fontSize = 15.sp,
-//                            maxLines = 1,
-//                        )
+                        Spacer(Modifier.height(1.dp))
+                        Text(
+                            "Last ${uiState.lastActivity}",
+                            fontSize = 15.sp,
+                            maxLines = 1,
+                        )
                     }
                 },
                 actions = {
@@ -154,21 +146,16 @@ private fun RoomScreen(
                 .fillMaxSize()
         ) {
             LazyColumn (
-                reverseLayout = true
+                reverseLayout = true,
+                modifier = Modifier.padding(horizontal = 4.dp)
             ){
                 items(uiState.allMessages){message->
                     Message(
                         username = message.username,
                         msg = message.content,
                         isSentByUser = (uiState.userId == message.userId),
+                        timestamp = "${message.createdAt.hour}:${message.createdAt.minute}   ${message.createdAt.date}/${message.createdAt.month}"
                     )
-//                    Spacer(Modifier.height(1.dp))
-//                    Text(
-//                        "Send by",
-//                        fontSize = 10.sp,
-//                        maxLines = 1,
-//                        modifier = Modifier.padding(start = 16.dp)
-//                    )
                 }
             }
 
@@ -178,36 +165,47 @@ private fun RoomScreen(
 
 
 @Composable
-private fun Message(username: String, msg: String, isSentByUser: Boolean) {
+private fun Message(username: String, msg: String, isSentByUser: Boolean, timestamp: String) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (isSentByUser) Arrangement.End else Arrangement.Start
     ) {
-        Card(
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 6.dp
-            ),
-            modifier = Modifier.widthIn(max = screenWidth.dp.times(0.8f)).padding(4.dp),
-            shape = RoundedCornerShape(4.dp),
+        Column(
+            horizontalAlignment = if (isSentByUser) Alignment.End else Alignment.Start
         ) {
-            Text(
-                text = username,
+            Card(
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 6.dp
+                ),
                 modifier = Modifier
-                    .padding(start = 16.dp, top = 5.dp, end = 16.dp),
-                textAlign = TextAlign.Left,
-                fontSize = 15.sp
-            )
+                    .widthIn(max = screenWidth.dp.times(0.8f))
+                    .padding(4.dp),
+                shape = RoundedCornerShape(4.dp),
+            ) {
+                Text(
+                    text = username,
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 5.dp, end = 16.dp),
+                    textAlign = TextAlign.Left,
+                    fontSize = 15.sp
+                )
+                Text(
+                    text = msg,
+                    modifier = Modifier
+                        .padding(start = 16.dp, bottom = 5.dp, end = 16.dp),
+                    textAlign = TextAlign.Left,
+                    fontSize = 14.sp
+                )
+            }
+            Spacer(Modifier.height(1.dp))
             Text(
-                text = msg,
-                modifier = Modifier
-                    .padding(start = 16.dp, bottom = 5.dp, end = 16.dp),
-                textAlign = TextAlign.Left,
-                fontSize = 14.sp
+                timestamp,
+                fontSize = 10.sp,
+                maxLines = 1
             )
         }
     }
-
 }
 
 //@Preview

@@ -11,6 +11,9 @@ import com.cookie.chatapp.domain.manager.PreferenceManager
 import com.cookie.chatapp.domain.models.MessageModel
 import com.cookie.chatapp.domain.models.RoomEvent
 import com.cookie.chatapp.domain.models.UserModel
+import com.cookie.chatapp.domain.models.fromStringToMessageTimestamp
+import com.cookie.chatapp.domain.models.getOffsetFromNow
+import com.cookie.chatapp.domain.models.toDateFromTimestamp
 import com.cookie.chatapp.domain.repository.RoomRepository
 import com.cookie.chatapp.domain.util.json
 import io.socket.client.Socket
@@ -111,13 +114,16 @@ class RoomRepositoryImpl(
                 roomCode = roomCode
             )
         ).data.messages.map {message->
+            val time2 = toDateFromTimestamp(message.updatedAt)
             MessageModel(
                 content = message.content,
                 status = message.status,
                 isSystem = message.isSystem,
                 userId = message.user.id,
                 roomCode = message.roomCode,
-                username = message.user.username
+                username = message.user.username,
+                createdAt = fromStringToMessageTimestamp(message.createdAt),
+                updatedAt = getOffsetFromNow(time2),
             )
         }.asReversed()
     }

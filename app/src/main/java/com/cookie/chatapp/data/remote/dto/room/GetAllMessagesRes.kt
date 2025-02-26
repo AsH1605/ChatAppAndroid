@@ -20,7 +20,9 @@ data class Message(
     val status: String,
     val isSystem: Boolean,
     val user: MessageUser,
-    val roomCode: String
+    val roomCode: String,
+    val createdAt: String,
+    val updatedAt: String
 )
 
 @Serializable

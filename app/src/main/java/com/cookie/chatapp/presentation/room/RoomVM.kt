@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cookie.chatapp.domain.models.MessageModel
+import com.cookie.chatapp.domain.models.MessageTimestamp
 import com.cookie.chatapp.domain.models.RoomEvent
 import com.cookie.chatapp.domain.repository.RoomRepository
 import com.cookie.chatapp.domain.repository.UserRepository
@@ -17,6 +18,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,7 +35,7 @@ class RoomVM @Inject constructor(
         roomCode = "",
         message = "",
         allMessages = listOf<MessageModel>(),
-        userId = ""
+        userId = "",
     ))
 
     val uiState = _uiState.asStateFlow()
@@ -93,6 +98,7 @@ class RoomVM @Inject constructor(
             when(roomEvent){
                 RoomEvent.Connected -> {Log.d("VM", "connected")}
                 is RoomEvent.MessageReceived -> {
+                    _uiState.update { it.copy(allMessages = it.allMessages + roomEvent.message)}
                 }
                 is RoomEvent.UserJoined -> {Log.d("VM", "joined room ${roomEvent.userModel.username}")}
             }
